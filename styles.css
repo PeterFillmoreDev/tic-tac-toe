@@ -1,0 +1,26 @@
+body{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+#game-board{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+
+.square{
+    background-color: red;
+    width: 100%;
+    padding-bottom: 35%;
+    padding-top: 35%;
+    position: relative; /* If you want text inside of it */
+    border: 3px black solid;
+    text-align: center;
+    font-size: x-large;
+}
+
+#left-column,
+#right-column{
+    text-align: center;
+}
