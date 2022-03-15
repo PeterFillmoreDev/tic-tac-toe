@@ -1,7 +1,7 @@
 let ticTacToe = {
 
-    data: (function(){
-        const gameArray = [  
+    data: {
+        gameArray: [  
             {position: 'a1', mark:''},
             {position: 'a2', mark:''},
             {position: 'a3', mark:''},
@@ -11,96 +11,78 @@ let ticTacToe = {
             {position: 'c1', mark:''},
             {position: 'c2', mark:''},
             {position: 'c3', mark:''},
-        ];
+        ],
         
-        const turn = { 
+        turn : { 
             turn: 'X',
             turnChange: function(){
                 if(this.turn == 'X'){
-                    this.turn = 'O'
+                    this.turn = 'O';
                 }
                 else if(this.turn == 'O'){
-                    this.turn = 'X'
+                    this.turn = 'X';
                 };
             },
-        };
+        },
 
-        const retreiveSquareData = function(position){
-            index = squareIndexFinder(position);
-            return gameArray[index];
-        };
+        retreiveSquareData: function(position){
+            index = this.squareIndexFinder(position);
+            return this.gameArray[index];
+        },
 
-        const squareIndexFinder= function(pos){
+        squareIndexFinder: function(pos){
             return this.gameArray.map(square => square.position).indexOf(pos);
-        };
+        },
 
-        const addMark = function(position){
+        addMark: function(position){
             let index = this.squareIndexFinder(position); 
             this.gameArray[index].mark = this.turn.turn;
-        };
-        return{
-            addMark: addMark,
-            gameArray: gameArray,
-            turn: turn,
-            squareIndexFinder: squareIndexFinder,
-        }
-    })(),
+            this.turn.turnChange();
+        },
+    },
     
-    coreGame: (function(){
+    coreGame: {
+        cacheDom: function(){
+            this.gameBoard = document.querySelector('#game-board');
+            this.domSquares = this.gameBoard.querySelectorAll('.square');
+        },
     
-        const cacheDom = (function(){
-            gameBoard = document.querySelector('#game-board');
-            domSquares = this.gameBoard.querySelectorAll('.square');
-            return{
-                gameBoard: gameBoard,
-                domSquares: domSquares,
-            };
-        })();
-    
-        const render = function() {
+        render: function() {
             while (this.gameBoard.firstChild) {
                 this.gameBoard.firstChild.remove()
             };
-            this.data.gameArray.forEach(square => {
+            ticTacToe.data.gameArray.forEach(square => {
                 const template = `<div class="square" id="pos${square.position}">${square.mark}</div>`;
                 const element = document.createElement('div');
                 element.innerHTML = template;
                 this.gameBoard.appendChild(element.lastChild);
             });
-            cacheDom();
-        };
-        
-        const refresh = function(){
-            render();
-            cacheDom();
-            bindEvents();
-        };
+            this.cacheDom();
+        },
 
-        const bindEvents = function(){
+        bindEvents: function(){
             this.domSquares.forEach(square => {ticTacToe.squareMarkEvent(square)});
-        };
+        },
 
-        return {
-            refresh: refresh,
-        }
-
-
-    })(),
+        refresh: function(){
+            this.cacheDom();
+            this.render();
+            this.bindEvents();
+        },
+    },
 
     squareMarkEvent: function(square){
         let squarePosition = square.id.substring(3);
         if(this.data.retreiveSquareData(squarePosition).mark == ''){
             square.addEventListener('click', e => { 
                 this.data.addMark(squarePosition);
-                this.data.turn.turnChange();
-                this.refresh();
+                ticTacToe.coreGame.refresh();
             });
         };
     },
 
     init: function(){
-        this.data();
-        this.coreGame.refresh() ;
+        this.coreGame.refresh();
     }
 };
 
