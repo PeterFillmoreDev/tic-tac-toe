@@ -1,8 +1,7 @@
-    let ticTacToe = {
+let ticTacToe = {
 
-        mark: 'X',
-
-        squares: [  
+    data: (function(){
+        const gameArray = [  
             {position: 'a1', mark:''},
             {position: 'a2', mark:''},
             {position: 'a3', mark:''},
@@ -12,55 +11,9 @@
             {position: 'c1', mark:''},
             {position: 'c2', mark:''},
             {position: 'c3', mark:''},
-        ],
-
-        init: function(){
-            this.cacheDom();
-            this.render();
-            this.bindEvents();
-
-        },
-
-        refresh: function(){
-            this.cacheDom();
-            this.render();
-            this.bindEvents();
-            this.turn.turnChange();
-        },
-
-        cacheDom: function(){
-            this.gameBoard = document.querySelector('#game-board');
-            this.domSquares = this.gameBoard.querySelectorAll('.square');
-        },
-
-        render: function() {
-            while (this.gameBoard.firstChild) {
-                this.gameBoard.firstChild.remove()
-            };
-            this.squares.forEach(square => {
-                const template = `<div class="square" id="pos${square.position}">${square.mark}</div>`;
-                const element = document.createElement('div');
-                element.innerHTML = template;
-                this.gameBoard.appendChild(element.lastChild);
-            });
-            this.cacheDom();
-        },
-
-        bindEvents: function(){
-            this.domSquares.forEach(square => {this.squareMarker(square)});
-        },
-
-        squareMarker: function(square){
-            let index = this.squareIndexFinder(square); 
-            if(this.squares[index].mark == ''){
-                square.addEventListener('click', e => { 
-                    this.squares[index].mark = this.turn.turn;
-                    this.refresh();
-                });
-            };
-        },
-
-        turn: { 
+        ];
+        
+        const turn = { 
             turn: 'X',
             turnChange: function(){
                 if(this.turn == 'X'){
@@ -70,14 +23,85 @@
                     this.turn = 'X'
                 };
             },
-        },
+        };
 
-        squareIndexFinder: function(square){
-            let squareid = square.id;
-            let squarePosition = squareid.substring(3);
-            let index = this.squares.map(squares=> squares.position).indexOf(squarePosition);
-            return(index);
-        },
+        const retreiveSquareData = function(position){
+            index = squareIndexFinder(position);
+            return gameArray[index];
+        };
 
-    };
-    ticTacToe.init();
+        const squareIndexFinder= function(pos){
+            return this.gameArray.map(square => square.position).indexOf(pos);
+        };
+
+        const addMark = function(position){
+            let index = this.squareIndexFinder(position); 
+            this.gameArray[index].mark = this.turn.turn;
+        };
+        return{
+            addMark: addMark,
+            gameArray: gameArray,
+            turn: turn,
+            squareIndexFinder: squareIndexFinder,
+        }
+    })(),
+    
+    coreGame: (function(){
+    
+        const cacheDom = (function(){
+            gameBoard = document.querySelector('#game-board');
+            domSquares = this.gameBoard.querySelectorAll('.square');
+            return{
+                gameBoard: gameBoard,
+                domSquares: domSquares,
+            };
+        })();
+    
+        const render = function() {
+            while (this.gameBoard.firstChild) {
+                this.gameBoard.firstChild.remove()
+            };
+            this.data.gameArray.forEach(square => {
+                const template = `<div class="square" id="pos${square.position}">${square.mark}</div>`;
+                const element = document.createElement('div');
+                element.innerHTML = template;
+                this.gameBoard.appendChild(element.lastChild);
+            });
+            cacheDom();
+        };
+        
+        const refresh = function(){
+            render();
+            cacheDom();
+            bindEvents();
+        };
+
+        const bindEvents = function(){
+            this.domSquares.forEach(square => {ticTacToe.squareMarkEvent(square)});
+        };
+
+        return {
+            refresh: refresh,
+        }
+
+
+    })(),
+
+    squareMarkEvent: function(square){
+        let squarePosition = square.id.substring(3);
+        if(this.data.retreiveSquareData(squarePosition).mark == ''){
+            square.addEventListener('click', e => { 
+                this.data.addMark(squarePosition);
+                this.data.turn.turnChange();
+                this.refresh();
+            });
+        };
+    },
+
+    init: function(){
+        this.data();
+        this.coreGame.refresh() ;
+    }
+};
+
+ticTacToe.init();
