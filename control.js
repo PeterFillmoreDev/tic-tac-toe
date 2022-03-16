@@ -83,7 +83,23 @@ let ticTacToe = {
 
     init: function(){
         this.coreGame.refresh();
-    }
+    },
+
+    meta:{
+        isWon: function(){
+            let gameArray = ticTacToe.data.gameArray;
+            let isWin = function(mark1, mark2, mark3,){
+                if(mark1 == mark2 && mark1 == mark3){
+                    return true
+                }else{
+                    return false
+                };
+            };
+        },
+    },
+
+
+
 };
 
 ticTacToe.init();
