@@ -45,6 +45,17 @@ let ticTacToe = {
         cacheDom: function(){
             this.gameBoard = document.querySelector('#game-board');
             this.domSquares = this.gameBoard.querySelectorAll('.square');
+            this.player1Winner = document.querySelector('#winner1');
+            this.player2Winner = document.querySelector('#winner2');
+        },
+
+        domFunctions:{
+            winnerHider: function(winnerTag){
+                winnerTag.style.display = 'none';
+            },
+            winnerRevealer: function(winnerTag){
+                winnerTag.style.display = '';
+            },
         },
     
         render: function() {
@@ -76,25 +87,38 @@ let ticTacToe = {
         if(this.data.retreiveSquareData(squarePosition).mark == ''){
             square.addEventListener('click', e => { 
                 this.data.addMark(squarePosition);
+                this.meta.isWon();
                 ticTacToe.coreGame.refresh();
             });
         };
+
     },
 
     init: function(){
         this.coreGame.refresh();
+        this.coreGame.domFunctions.winnerHider(this.coreGame.player1Winner);
+        this.coreGame.domFunctions.winnerHider(this.coreGame.player2Winner);
     },
 
     meta:{
         isWon: function(){
+            let winArray = ['x','x','x',];
             let gameArray = ticTacToe.data.gameArray;
-            let isWin = function(mark1, mark2, mark3,){
+            
+            
+            let isWin = function([mark1, mark2, mark3,]){
                 if(mark1 == mark2 && mark1 == mark3){
-                    return true
+                    console.log("w");
+                    return true;
                 }else{
-                    return false
+                    console.log("nw");
+                    return false;
                 };
             };
+            if(isWin(winArray) == true){
+                ticTacToe.coreGame.domFunctions.winnerRevealer(ticTacToe.coreGame.player1Winner);
+            };
+            
         },
     },
 
