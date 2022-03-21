@@ -102,12 +102,43 @@ let ticTacToe = {
 
     meta:{
         isWon: function(){
-            let winArray = ['x','x','x',];
+            let winArray = [];
             let gameArray = ticTacToe.data.gameArray;
+            let arrayPusher = function(array){
+                winArray.push(array);
+            };
+            let rowArrayMaker = function(){
+                for (let i = 0; i < 3; i++) {
+                    let newArray =  gameArray.filter(square => {
+                                        let squareRow = square.position.substring(0,1);
+                                        let targetRow = String.fromCharCode(97+i);
+                                        if(squareRow == targetRow){
+                                            return true;
+                                        }
+                                    }).map(square => {return square.mark});
+                    winArray.push(newArray);
+                };
+                console.log(winArray);
+            };
+            let columnArrayMaker = function(){
+                for (let i = 0; i < 3; i++) {
+                    let newArray =  gameArray.filter(square => {
+                                        let squareColumn = square.position.substring(1,2);
+                                        console.log(squareColumn)
+                                        let targetColumn = (1+i);
+                                        if(squareColumn == targetColumn){
+                                            return true;
+                                        }
+                                    }).map(square => {return square.mark});
+                    winArray.push(newArray);
+                };
+                console.log(winArray);
+            };
             
-            
+
+
             let isWin = function([mark1, mark2, mark3,]){
-                if(mark1 == mark2 && mark1 == mark3){
+                if(mark1 == mark2 && mark1 == mark3 && mark1 != ''){
                     console.log("w");
                     return true;
                 }else{
@@ -115,15 +146,14 @@ let ticTacToe = {
                     return false;
                 };
             };
-            if(isWin(winArray) == true){
+            rowArrayMaker();
+            columnArrayMaker();
+            if(isWin(winArray) === true){
                 ticTacToe.coreGame.domFunctions.winnerRevealer(ticTacToe.coreGame.player1Winner);
             };
             
         },
     },
-
-
-
 };
 
 ticTacToe.init();
