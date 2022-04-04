@@ -103,43 +103,36 @@ let ticTacToe = {
     isWon: function () {
       let winArray = [];
       let gameArray = ticTacToe.data.gameArray;
-      let arrayPusher = function (array) {
-        winArray.push(array);
+
+      let arrayMaker = function (substringStart, substringEnd, target) {
+        let newArray = gameArray
+          .filter((square) => {
+            let squareColumn = square.position.substring(
+              substringStart,
+              substringEnd
+            );
+            if (squareColumn == target) {
+              return true;
+            }
+          })
+          .map((square) => {
+            return square.mark;
+          });
+        winArray.push(newArray);
       };
-      let rowArrayMaker = function () {
-        for (let i = 0; i < 3; i++) {
-          let newArray = gameArray
-            .filter((square) => {
-              let squareRow = square.position.substring(0, 1);
-              let targetRow = String.fromCharCode(97 + i);
-              if (squareRow == targetRow) {
-                return true;
-              }
-            })
-            .map((square) => {
-              return square.mark;
-            });
-          winArray.push(newArray);
-        }
-        console.log(winArray);
-      };
+
       let columnArrayMaker = function () {
         for (let i = 0; i < 3; i++) {
-          let newArray = gameArray
-            .filter((square) => {
-              let squareColumn = square.position.substring(1, 2);
-              console.log(squareColumn);
-              let targetColumn = 1 + i;
-              if (squareColumn == targetColumn) {
-                return true;
-              }
-            })
-            .map((square) => {
-              return square.mark;
-            });
-          winArray.push(newArray);
+          let targetColumn = 1 + i;
+          arrayMaker(1, 2, targetColumn);
         }
-        console.log(winArray);
+      };
+
+      let rowArrayMaker = function () {
+        for (let i = 0; i < 3; i++) {
+          let targetRow = String.fromCharCode(97 + i);
+          arrayMaker(0, 1, targetRow);
+        }
       };
 
       let isWin = function ([mark1, mark2, mark3]) {
@@ -153,11 +146,13 @@ let ticTacToe = {
       };
       rowArrayMaker();
       columnArrayMaker();
-      if (isWin(winArray) === true) {
-        ticTacToe.coreGame.domFunctions.winnerRevealer(
-          ticTacToe.coreGame.player1Winner
-        );
-      }
+      winArray.forEach((condition) => {
+        if (isWin(condition) === true) {
+          ticTacToe.coreGame.domFunctions.winnerRevealer(
+            ticTacToe.coreGame.player1Winner
+          );
+        }
+      });
     },
   },
 };
