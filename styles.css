@@ -1,13 +1,16 @@
 body{
+    background-color: blue;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
 }
 
 #game-board{
+    background-color: wheat;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+    padding: 5px;
 }
-
 
 .square{
     background-color: red;
@@ -15,7 +18,6 @@ body{
     padding-bottom: 35%;
     padding-top: 35%;
     position: relative; /* If you want text inside of it */
-    border: 3px black solid;
     text-align: center;
     font-size: x-large;
 }
