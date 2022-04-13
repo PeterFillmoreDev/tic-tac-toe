@@ -21,6 +21,9 @@ body{
     position: relative; /* If you want text inside of it */
     text-align: center;
     font-size: x-large;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #left-column,

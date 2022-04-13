@@ -76,7 +76,7 @@ let ticTacToe = {
       //assigns postition for reference when clicked and a displays relitive mark
       //as well as class for css
       ticTacToe.data.gameArray.forEach((square) => {
-        const template = `<div class="square" id="pos${square.position}">${square.mark}</div>`;
+        const template = `<div class="square" id="pos${square.position}"><span>${square.mark}<span></div>`;
         const element = document.createElement("div");
         element.innerHTML = template;
         this.gameBoard.appendChild(element.lastChild);
